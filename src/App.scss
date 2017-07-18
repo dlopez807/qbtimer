@@ -1,0 +1,60 @@
+$blue: rgb(139, 157, 195);
+$darkBlue: rgb(059, 089, 152);
+$lightBlue: rgb(223, 227, 238);
+$gray: rgb(247, 247, 247);
+$white: rgb(255, 255, 255);
+
+body {
+  background: black;
+  color: $white;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 80px;
+}
+
+.App-logo.animate {
+  animation: App-logo-spin infinite 1s linear;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.App-header {
+  background-color: $darkBlue;
+  height: 150px;
+  padding: 20px;
+  color: $white;
+}
+
+.App-intro {
+  font-size: 15em;
+  margin: 0;
+  font-family: Courier;
+}
+
+@media only screen and (max-device-width: 667px) {
+  html, body, #root {
+    width: 100%;
+    height: 100%;
+  }
+  h2 {
+    font-size: 15px;
+    margin: 0
+  }
+  .App-logo {
+    height: 40px;
+  }
+  .App-header {
+    height: 80px;
+  }
+  .App-intro {
+    font-size: 4em;
+  }
+}

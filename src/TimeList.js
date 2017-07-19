@@ -7,7 +7,7 @@ var TimeList = React.createClass({
 			return <li key={index}>{time}</li>
 		});
 		return (
-			<ul>{timeList}</ul>
+			<ul className='timelist'>{timeList}</ul>
 		);
 	}
 

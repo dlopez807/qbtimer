@@ -4,13 +4,19 @@ $lightBlue: rgb(223, 227, 238);
 $gray: rgb(247, 247, 247);
 $white: rgb(255, 255, 255);
 
-body {
-  background: black;
-  color: $white;
+html, body, #root {
+  height: 100%;
 }
 
 .App {
   text-align: center;
+  background: black;
+  color: $white;
+  height: 100%;
+}
+
+.App.timerActive {
+  background: $gray;
 }
 
 .App-logo {
@@ -37,6 +43,19 @@ body {
   font-size: 15em;
   margin: 0;
   font-family: Courier;
+}
+
+.App-intro.down {
+  color: red;
+}
+
+.App-intro.down.ready {
+  color: green;
+}
+
+.App.timerActive .App-intro,
+.App.timerActive .timelist{
+  color: black;
 }
 
 @media only screen and (max-device-width: 667px) {

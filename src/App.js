@@ -9,13 +9,61 @@ var App = React.createClass({
       scramble: genScramble3(),
       time: 0,
       timerRunning: false,
+      timerClass: '',
       timeList: [],
       interval: ''
     };
   },
   componentWillMount: function() {
-    document.addEventListener('keyup', this.handleKeyUp);
-    //document.addEventListener('keydown', this.handleKeyDown);
+    this.chao();
+  },
+  chao: function() {
+    document.removeEventListener('keyup', this.chao);
+    var lastKeyUpAt = 0;
+    var timeHeldDown = 1000;
+    var timerReady = false;
+
+    document.addEventListener('keydown', chao1);
+    document.addEventListener('keyup', chao2);
+    var that = this;
+    that.setState({
+      timerClass: ''
+    });
+
+    function chao1() {
+      // Set key down time to the current time
+      var keyDownAt = new Date();
+      that.setState({
+        timerClass: ' down'
+      });
+
+      // Use a timeout with 1000ms (this would be your X variable)
+      setTimeout(function() {
+          // Compare key down time with key up time
+          if (+keyDownAt > +lastKeyUpAt) {
+            //console.log('held down for ' + (timeHeldDown / 1000) + ' seconds')// Key has been held down for x seconds
+            if (!timerReady) {
+              console.log('timer ready');
+              timerReady = true;
+              that.setState({
+                timerClass: ' down ready'
+              });
+              document.removeEventListener('keydown', chao1);
+              document.removeEventListener('keyup', chao2);
+              document.addEventListener('keyup', that.handleKeyUp);
+            }
+          }
+          else
+            console.log('still not yet')// Key has not been held down for x seconds
+      }, timeHeldDown);
+    }
+    function chao2() {
+      // Set lastKeyUpAt to hold the time the last key up event was fired
+      lastKeyUpAt = new Date();
+      that.setState({
+        timerClass: ''
+      });
+    }
   },
   handleKeyUp: function(e) {
     if (!this.state.timerRunning) {
@@ -23,6 +71,7 @@ var App = React.createClass({
       document.addEventListener('keydown', this.handleKeyDown);
       this.setState({
         timerRunning: true,
+        timerClass: '',
         time: 0,
         interval: setInterval(this.startTimer, 10)
       })      
@@ -30,7 +79,7 @@ var App = React.createClass({
   },
   handleKeyDown: function() {
     if (this.state.timerRunning) {
-      document.addEventListener('keyup', this.foo);
+      document.addEventListener('keyup', this.chao);
       document.removeEventListener('keydown', this.handleKeyDown);
       clearInterval(this.state.interval);
       var currentTimeList = this.state.timeList;
@@ -42,10 +91,10 @@ var App = React.createClass({
       })
     }
   },
-  foo: function() {
-    document.addEventListener('keyup', this.handleKeyUp);
-    document.removeEventListener('keyup', this.foo);
-  },
+  // foo: function() {
+  //   document.addEventListener('keyup', this.handleKeyUp);
+  //   document.removeEventListener('keyup', this.foo);
+  // },
   startTimer: function() {
     var currentTime = this.state.time;
     var nextTime = currentTime + 1;
@@ -54,16 +103,20 @@ var App = React.createClass({
     });
   },
   render: function() {
+    var appClass = 'App';
     var logoClass = 'App-logo';
-    if (this.state.timerRunning)
+    if (this.state.timerRunning) {
+      appClass += ' timerActive';
       logoClass += ' animate';
+
+    }
     return (
-      <div className="App">
+      <div className={appClass}>
         <div className="App-header">
           <img src={logo} className={logoClass} alt="logo" />
           <h2>{this.state.scramble}</h2>
         </div>
-        <p className="App-intro">
+        <p className={'App-intro' + this.state.timerClass}>
           {convertTime(this.state.time)}
         </p>
         <TimeList timeList={this.state.timeList} />

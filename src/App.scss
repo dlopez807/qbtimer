@@ -4,8 +4,14 @@ $lightBlue: rgb(223, 227, 238);
 $gray: rgb(247, 247, 247);
 $white: rgb(255, 255, 255);
 
+* {
+  margin: 0;
+  padding: 0;
+}
+
 html, body, #root {
   height: 100%;
+  width: 100%;
 }
 
 .App {
@@ -54,15 +60,30 @@ html, body, #root {
 }
 
 .App.timerActive .App-intro,
-.App.timerActive .timelist{
+.App.timerActive .timelist,
+.App.timerActive .stats {
   color: black;
 }
 
-@media only screen and (max-device-width: 667px) {
-  html, body, #root {
-    width: 100%;
-    height: 100%;
-  }
+.timelist {
+  padding: 0 40%;
+}
+
+.stats {
+  list-style: none;
+  padding: 0;
+  height: 50px;
+  width: 100%;
+}
+.stats li {
+  float: left;
+  width: 25%;
+}
+
+@media only screen 
+and (max-width : 1024px)  {
+//@media only screen and (max-device-width: 1024px) {
+//@media only screen and (max-device-width: 667px) {
   h2 {
     font-size: 15px;
     margin: 0
@@ -70,6 +91,20 @@ html, body, #root {
   .App-logo {
     height: 40px;
   }
+  .App-header {
+    height: 60px;
+  }
+  .App-intro {
+    font-size: 7em;
+  }
+
+  .timelist {
+    padding: 0 25%;
+  }
+}
+
+@media only screen 
+and (max-width : 667px)  {
   .App-header {
     height: 80px;
   }

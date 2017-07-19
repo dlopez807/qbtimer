@@ -1,6 +1,7 @@
 var React = require('react');
 var logo = require('./logo.svg');
-require('./App.css')
+require('./App.css');
+var Stats = require('./Stats');
 var TimeList = require('./TimeList');
 
 var App = React.createClass({
@@ -102,6 +103,20 @@ var App = React.createClass({
       time: nextTime
     });
   },
+  convertTime: function(time) {
+    var t = time;
+    var minutes = Math.floor(t / 6000);
+    t = t % 6000; //t - (minutes * 60000);
+    var seconds = Math.floor(t / 100);
+    t = t % 100;//t - (seconds * 1000);
+    //t = Math.floor(t / 10);
+
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+    t = Math.trunc(t);
+    t = (t < 10) ? "0" + t : t;
+    return minutes + ":" + seconds + ":" + t;
+  },
   render: function() {
     var appClass = 'App';
     var logoClass = 'App-logo';
@@ -117,8 +132,9 @@ var App = React.createClass({
           <h2>{this.state.scramble}</h2>
         </div>
         <p className={'App-intro' + this.state.timerClass}>
-          {convertTime(this.state.time)}
+          {this.convertTime(this.state.time)}
         </p>
+        <Stats convertTime={this.convertTime} timeList={this.state.timeList} />
         <TimeList timeList={this.state.timeList} />
       </div>
     );
@@ -127,21 +143,6 @@ var App = React.createClass({
 });
 
 module.exports = App;
-
-function convertTime(time) {
-  var t = time;
-  var minutes = Math.floor(t / 6000);
-  t = t % 6000; //t - (minutes * 60000);
-  var seconds = Math.floor(t / 100);
-  t = t % 100;//t - (seconds * 1000);
-  //t = Math.floor(t / 10);
-
-  minutes = (minutes < 10) ? "0" + minutes : minutes;
-  seconds = (seconds < 10) ? "0" + seconds : seconds;
-  t = (t < 10) ? "0" + t : t;
-  return minutes + ":" + seconds + ":" + t;
-  //return time;
-}
 
 /*
   scramble

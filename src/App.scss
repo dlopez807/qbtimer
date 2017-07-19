@@ -43,12 +43,12 @@ html, body, #root {
   height: 150px;
   padding: 20px;
   color: $white;
+  font-size: 1.5em;
 }
 
 .App-intro {
   font-size: 15em;
   margin: 0;
-  font-family: Courier;
 }
 
 .App-intro.down {
@@ -65,6 +65,14 @@ html, body, #root {
   color: black;
 }
 
+.time {
+  font-family: Courier;
+}
+
+.timelist, .stats {
+  font-size: 1.5em;
+}
+
 .timelist {
   padding: 0 40%;
 }
@@ -72,7 +80,7 @@ html, body, #root {
 .stats {
   list-style: none;
   padding: 0;
-  height: 50px;
+  height: 60px;
   width: 100%;
 }
 .stats li {
@@ -85,7 +93,7 @@ and (max-width : 1024px)  {
 //@media only screen and (max-device-width: 1024px) {
 //@media only screen and (max-device-width: 667px) {
   h2 {
-    font-size: 15px;
+    
     margin: 0
   }
   .App-logo {
@@ -93,13 +101,14 @@ and (max-width : 1024px)  {
   }
   .App-header {
     height: 60px;
+    font-size: .8em;
   }
   .App-intro {
     font-size: 7em;
   }
 
   .timelist {
-    padding: 0 25%;
+    padding: 0 40%;
   }
 }
 
@@ -110,5 +119,9 @@ and (max-width : 667px)  {
   }
   .App-intro {
     font-size: 4em;
+  }
+
+  .timelist {
+    padding: 0 25%;
   }
 }

@@ -1,6 +1,7 @@
 var React = require('react');
 var logo = require('./logo.svg');
 require('./App.css');
+var Time = require('./Time');
 var Stats = require('./Stats');
 var TimeList = require('./TimeList');
 
@@ -92,30 +93,12 @@ var App = React.createClass({
       })
     }
   },
-  // foo: function() {
-  //   document.addEventListener('keyup', this.handleKeyUp);
-  //   document.removeEventListener('keyup', this.foo);
-  // },
   startTimer: function() {
     var currentTime = this.state.time;
     var nextTime = currentTime + 1;
     this.setState({
       time: nextTime
     });
-  },
-  convertTime: function(time) {
-    var t = time;
-    var minutes = Math.floor(t / 6000);
-    t = t % 6000; //t - (minutes * 60000);
-    var seconds = Math.floor(t / 100);
-    t = t % 100;//t - (seconds * 1000);
-    //t = Math.floor(t / 10);
-
-    minutes = (minutes < 10) ? "0" + minutes : minutes;
-    seconds = (seconds < 10) ? "0" + seconds : seconds;
-    t = Math.trunc(t);
-    t = (t < 10) ? "0" + t : t;
-    return minutes + ":" + seconds + ":" + t;
   },
   render: function() {
     var appClass = 'App';
@@ -132,9 +115,9 @@ var App = React.createClass({
           <h2>{this.state.scramble}</h2>
         </div>
         <p className={'App-intro' + this.state.timerClass}>
-          {this.convertTime(this.state.time)}
+          <Time time={this.state.time} />
         </p>
-        <Stats convertTime={this.convertTime} timeList={this.state.timeList} />
+        <Stats timeList={this.state.timeList} />
         <TimeList timeList={this.state.timeList} />
       </div>
     );

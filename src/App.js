@@ -13,59 +13,64 @@ var App = React.createClass({
       timerRunning: false,
       timerClass: '',
       timeList: [],
-      interval: ''
+      timerReady: false,
+      interval: '',
+      lastKeyUpAt: 0
     };
   },
   componentWillMount: function() {
-    this.chao();
+    this.setupTimer();
   },
-  chao: function() {
-    document.removeEventListener('keyup', this.chao);
-    var lastKeyUpAt = 0;
-    var timeHeldDown = 1000;
-    var timerReady = false;
-
-    document.addEventListener('keydown', chao1);
-    document.addEventListener('keyup', chao2);
-    var that = this;
-    that.setState({
-      timerClass: ''
+  setupTimer: function() {
+    this.setState({
+      timerClass: '',
+      timerReady: false,
+      lastKeyUpAt: 0
     });
+    var lastKeyUpAt = 0;
+    console.log('bacon')
+    document.removeEventListener('keyup', this.setupTimer);
+    document.addEventListener('keydown', this.handleKeyDownBeforeTimerReady);
+    document.addEventListener('keyup', this.handleKeyUpBeforeTimerReady);
+  },
+  handleKeyDownBeforeTimerReady: function() {
+    // Set key down time to the current time
+    var keyDownAt = new Date();
+    var timeHeldDown = 1000;
+    this.setState({
+      timerClass: ' down'
+    });
+    var that = this;
 
-    function chao1() {
-      // Set key down time to the current time
-      var keyDownAt = new Date();
-      that.setState({
-        timerClass: ' down'
-      });
-
-      // Use a timeout with 1000ms (this would be your X variable)
-      setTimeout(function() {
-          // Compare key down time with key up time
-          if (+keyDownAt > +lastKeyUpAt) {
-            //console.log('held down for ' + (timeHeldDown / 1000) + ' seconds')// Key has been held down for x seconds
-            if (!timerReady) {
-              console.log('timer ready');
-              timerReady = true;
-              that.setState({
-                timerClass: ' down ready'
-              });
-              document.removeEventListener('keydown', chao1);
-              document.removeEventListener('keyup', chao2);
-              document.addEventListener('keyup', that.handleKeyUp);
-            }
+    console.log(keyDownAt, this.state.lastKeyUpAt)
+    // Use a timeout with 1000ms (this would be your X variable)
+    setTimeout(function() {
+        console.log('in timeout')
+        // Compare key down time with key up time
+        if (+keyDownAt > +that.state.lastKeyUpAt) {
+          //console.log('held down for ' + (timeHeldDown / 1000) + ' seconds')// Key has been held down for x seconds
+          if (!that.state.timerReady) {
+            console.log('timer ready');
+            that.setState({
+              timerClass: ' down ready',
+              timerReady: true
+            });
+            document.removeEventListener('keydown', that.handleKeyDownBeforeTimerReady);
+            document.removeEventListener('keyup', that.handleKeyUpBeforeTimerReady);
+            document.addEventListener('keyup', that.handleKeyUp);
           }
-          else
-            console.log('still not yet')// Key has not been held down for x seconds
-      }, timeHeldDown);
-    }
-    function chao2() {
-      // Set lastKeyUpAt to hold the time the last key up event was fired
-      lastKeyUpAt = new Date();
-      that.setState({
-        timerClass: ''
-      });
-    }
+        }
+        else
+          console.log('still not yet')// Key has not been held down for x seconds
+    }, timeHeldDown);
+  },
+  handleKeyUpBeforeTimerReady: function() {
+    // Set lastKeyUpAt to hold the time the last key up event was fired
+    var newDate = new Date();
+    this.setState({
+      timerClass: '',
+      lastKeyUpAt: newDate
+    });
   },
   handleKeyUp: function(e) {
     if (!this.state.timerRunning) {
@@ -81,7 +86,7 @@ var App = React.createClass({
   },
   handleKeyDown: function() {
     if (this.state.timerRunning) {
-      document.addEventListener('keyup', this.chao);
+      document.addEventListener('keyup', this.setupTimer);
       document.removeEventListener('keydown', this.handleKeyDown);
       clearInterval(this.state.interval);
       var currentTimeList = this.state.timeList;

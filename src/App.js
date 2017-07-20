@@ -5,6 +5,9 @@ var Time = require('./Time');
 var Stats = require('./Stats');
 var TimeList = require('./TimeList');
 
+var eventStart = 'keydown'; //touchstart
+var eventEnd = 'keyup'; //touchend
+
 var App = React.createClass({
   getInitialState: function() {
     return {
@@ -17,16 +20,20 @@ var App = React.createClass({
     };
   },
   componentWillMount: function() {
+    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+      eventStart = 'touchstart';
+      eventEnd = 'touchend';
+    }
     this.chao();
   },
   chao: function() {
-    document.removeEventListener('keyup', this.chao);
+    document.removeEventListener(eventEnd, this.chao);
     var lastKeyUpAt = 0;
     var timeHeldDown = 1000;
     var timerReady = false;
 
-    document.addEventListener('keydown', chao1);
-    document.addEventListener('keyup', chao2);
+    document.addEventListener(eventStart, chao1);
+    document.addEventListener(eventEnd, chao2);
     var that = this;
     that.setState({
       timerClass: ''
@@ -50,9 +57,9 @@ var App = React.createClass({
               that.setState({
                 timerClass: ' down ready'
               });
-              document.removeEventListener('keydown', chao1);
-              document.removeEventListener('keyup', chao2);
-              document.addEventListener('keyup', that.handleKeyUp);
+              document.removeEventListener(eventStart, chao1);
+              document.removeEventListener(eventEnd, chao2);
+              document.addEventListener(eventEnd, that.handleKeyUp);
             }
           }
           else
@@ -69,8 +76,8 @@ var App = React.createClass({
   },
   handleKeyUp: function(e) {
     if (!this.state.timerRunning) {
-      document.removeEventListener('keyup', this.handleKeyUp);
-      document.addEventListener('keydown', this.handleKeyDown);
+      document.removeEventListener(eventEnd, this.handleKeyUp);
+      document.addEventListener(eventStart, this.handleKeyDown);
       this.setState({
         timerRunning: true,
         timerClass: '',
@@ -81,8 +88,8 @@ var App = React.createClass({
   },
   handleKeyDown: function() {
     if (this.state.timerRunning) {
-      document.addEventListener('keyup', this.chao);
-      document.removeEventListener('keydown', this.handleKeyDown);
+      document.addEventListener(eventEnd, this.chao);
+      document.removeEventListener(eventStart, this.handleKeyDown);
       clearInterval(this.state.interval);
       var currentTimeList = this.state.timeList;
       currentTimeList.unshift(this.state.time);

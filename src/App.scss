@@ -112,7 +112,8 @@ and (max-width : 1024px)  {
 @media only screen 
 and (max-width : 667px)  {
   .App-header {
-    height: 80px;
+    height: 90px;
+    padding: 10px 20px;
   }
   .App-intro {
     font-size: 4em;

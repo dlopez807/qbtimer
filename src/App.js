@@ -8,6 +8,11 @@ var TimeList = require('./TimeList');
 var eventStart = 'keydown'; //touchstart
 var eventEnd = 'keyup'; //touchend
 
+var excludedKeyCodes = [
+  91,  // left command key
+  93  // right command key
+];
+
 var App = React.createClass({
   getInitialState: function() {
     return {
@@ -39,7 +44,22 @@ var App = React.createClass({
       timerClass: ''
     });
 
-    function chao1() {
+    function chao1(e) {
+      // check if keypressed is in excludedKeyCodes list
+      var excludedKeyPressed = false;
+      if (e.altKey || e.ctrlKey || e.shiftKey)
+        excludedKeyPressed = true;
+      if (!excludedKeyPressed) {
+        excludedKeyCodes.forEach(function(keyCode) {
+          if (e.keyCode == keyCode) {
+            excludedKeyPressed = true;
+            return;
+          }
+        })
+      }
+      if (excludedKeyPressed)
+        return;
+
       // Set key down time to the current time
       var keyDownAt = new Date();
       that.setState({
@@ -50,9 +70,8 @@ var App = React.createClass({
       setTimeout(function() {
           // Compare key down time with key up time
           if (+keyDownAt > +lastKeyUpAt) {
-            //console.log('held down for ' + (timeHeldDown / 1000) + ' seconds')// Key has been held down for x seconds
             if (!timerReady) {
-              console.log('timer ready');
+
               timerReady = true;
               that.setState({
                 timerClass: ' down ready'
@@ -62,8 +81,6 @@ var App = React.createClass({
               document.addEventListener(eventEnd, that.handleKeyUp);
             }
           }
-          else
-            console.log('still not yet')// Key has not been held down for x seconds
       }, timeHeldDown);
     }
     function chao2() {

@@ -112,8 +112,11 @@ and (max-width : 1024px)  {
 @media only screen 
 and (max-width : 667px)  {
   .App-header {
-    height: 90px;
+    height: 15%;
     padding: 10px 20px;
+  }
+  .App-body {
+    height: 85%;
   }
   .App-intro {
     font-size: 4em;
@@ -122,8 +125,7 @@ and (max-width : 667px)  {
     height: 275px;
   }
   .stats li{
-    float: none;
-    width: auto;
+    width: 50%;
     margin-bottom: 10px;
   }
   .timelist {

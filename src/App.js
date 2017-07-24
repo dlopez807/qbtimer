@@ -5,8 +5,10 @@ var Time = require('./Time');
 var Stats = require('./Stats');
 var TimeList = require('./TimeList');
 
-var eventStart = 'keydown'; //touchstart
-var eventEnd = 'keyup'; //touchend
+// by default, start/stop timer using keyboard
+var timerElement = document;
+var eventStart = 'keydown';
+var eventEnd = 'keyup';
 
 var excludedKeyCodes = [
   91,  // left command key
@@ -24,21 +26,28 @@ var App = React.createClass({
       interval: ''
     };
   },
-  componentWillMount: function() {
+  newScramble: function() {
+    this.setState({
+        scramble: genScramble3()
+      })
+  },
+  componentDidMount: function() {
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+      // on mobile, start/stop timer by touching screen
+      timerElement = document.getElementsByClassName('App-body')[0];
       eventStart = 'touchstart';
       eventEnd = 'touchend';
     }
     this.chao();
   },
   chao: function() {
-    document.removeEventListener(eventEnd, this.chao);
+    timerElement.removeEventListener(eventEnd, this.chao);
     var lastKeyUpAt = 0;
     var timeHeldDown = 1000;
     var timerReady = false;
 
-    document.addEventListener(eventStart, chao1);
-    document.addEventListener(eventEnd, chao2);
+    timerElement.addEventListener(eventStart, chao1);
+    timerElement.addEventListener(eventEnd, chao2);
     var that = this;
     that.setState({
       timerClass: ''
@@ -76,9 +85,9 @@ var App = React.createClass({
               that.setState({
                 timerClass: ' down ready'
               });
-              document.removeEventListener(eventStart, chao1);
-              document.removeEventListener(eventEnd, chao2);
-              document.addEventListener(eventEnd, that.handleKeyUp);
+              timerElement.removeEventListener(eventStart, chao1);
+              timerElement.removeEventListener(eventEnd, chao2);
+              timerElement.addEventListener(eventEnd, that.handleKeyUp);
             }
           }
       }, timeHeldDown);
@@ -93,8 +102,8 @@ var App = React.createClass({
   },
   handleKeyUp: function(e) {
     if (!this.state.timerRunning) {
-      document.removeEventListener(eventEnd, this.handleKeyUp);
-      document.addEventListener(eventStart, this.handleKeyDown);
+      timerElement.removeEventListener(eventEnd, this.handleKeyUp);
+      timerElement.addEventListener(eventStart, this.handleKeyDown);
       this.setState({
         timerRunning: true,
         timerClass: '',
@@ -105,8 +114,8 @@ var App = React.createClass({
   },
   handleKeyDown: function() {
     if (this.state.timerRunning) {
-      document.addEventListener(eventEnd, this.chao);
-      document.removeEventListener(eventStart, this.handleKeyDown);
+      timerElement.addEventListener(eventEnd, this.chao);
+      timerElement.removeEventListener(eventStart, this.handleKeyDown);
       clearInterval(this.state.interval);
       var currentTimeList = this.state.timeList;
       currentTimeList.unshift(this.state.time);
@@ -135,14 +144,16 @@ var App = React.createClass({
     return (
       <div className={appClass}>
         <div className="App-header">
-          <img src={logo} className={logoClass} alt="logo" />
+          <img src={logo} className={logoClass} alt="logo" onClick={this.newScramble} />
           <h2>{this.state.scramble}</h2>
         </div>
-        <p className={'App-intro' + this.state.timerClass}>
-          <Time time={this.state.time} />
-        </p>
-        <Stats timeList={this.state.timeList} />
-        <TimeList timeList={this.state.timeList} />
+        <div className='App-body'>
+          <p className={'App-intro' + this.state.timerClass}>
+            <Time time={this.state.time} />
+          </p>
+          <Stats timeList={this.state.timeList} />
+          <TimeList timeList={this.state.timeList} />
+        </div>
       </div>
     );
   }

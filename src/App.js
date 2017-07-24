@@ -6,6 +6,9 @@ var Time = require('./Time');
 var Stats = require('./Stats');
 var TimeList = require('./TimeList');
 
+var FastClick = require('fastclick');
+FastClick.attach(document.body);
+
 // by default, start/stop timer using keyboard
 var timerElement = document;
 var eventStart = 'keydown';

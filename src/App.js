@@ -33,7 +33,7 @@ var App = React.createClass({
   componentDidMount: function() {
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
       // on mobile, start/stop timer by touching screen
-      timerElement = document.getElementsByClassName('App-body')[0];
+      timerElement = document.getElementsByClassName('app-body')[0];
       eventStart = 'touchstart';
       eventEnd = 'touchend';
     }
@@ -138,8 +138,8 @@ var App = React.createClass({
     });
   },
   render: function() {
-    var appClass = 'App';
-    var logoClass = 'App-logo';
+    var appClass = 'app';
+    var logoClass = 'app-logo';
     if (this.state.timerRunning) {
       appClass += ' timerActive';
       logoClass += ' animate';
@@ -147,12 +147,12 @@ var App = React.createClass({
     }
     return (
       <div className={appClass}>
-        <div className="App-header">
+        <div className="app-header">
           <img src={logo} className={logoClass} alt="logo" onClick={this.newScramble} />
           <h2>{this.state.scramble}</h2>
         </div>
-        <div className='App-body'>
-          <p className={'App-intro' + this.state.timerClass}>
+        <div className='app-body'>
+          <p className={'time-container' + this.state.timerClass}>
             <Time time={this.state.time} />
           </p>
           <Stats timeList={this.state.timeList} />

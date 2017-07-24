@@ -14,22 +14,22 @@ html, body, #root {
   width: 100%;
 }
 
-.App {
+.app {
   text-align: center;
   background: black;
   color: $white;
   height: 100%;
 }
 
-.App.timerActive {
+.app.timerActive {
   background: $gray;
 }
 
-.App-logo {
+.app-logo {
   height: 80px;
 }
 
-.App-logo.animate {
+.app-logo.animate {
   animation: App-logo-spin infinite 1s linear;
 }
 
@@ -38,7 +38,7 @@ html, body, #root {
   to { transform: rotate(360deg); }
 }
 
-.App-header {
+.app-header {
   background-color: $darkBlue;
   height: 150px;
   padding: 20px;
@@ -46,22 +46,22 @@ html, body, #root {
   font-size: 1.5em;
 }
 
-.App-intro {
+.time-container {
   font-size: 15em;
   margin: 0;
 }
 
-.App-intro.down {
+.time-container.down {
   color: red;
 }
 
-.App-intro.down.ready {
+.time-container.down.ready {
   color: green;
 }
 
-.App.timerActive .App-intro,
-.App.timerActive .timelist,
-.App.timerActive .stats {
+.app.timerActive .time-container,
+.app.timerActive .timelist,
+.app.timerActive .stats {
   color: black;
 }
 
@@ -93,14 +93,14 @@ and (max-width : 1024px)  {
   h2 {
     margin: 0
   }
-  .App-logo {
+  .app-logo {
     height: 40px;
   }
-  .App-header {
+  .app-header {
     height: 60px;
     font-size: .8em;
   }
-  .App-intro {
+  .time-container {
     font-size: 7em;
   }
 
@@ -111,15 +111,15 @@ and (max-width : 1024px)  {
 
 @media only screen 
 and (max-width : 667px)  {
-  .App-header {
+  .app-header {
     height: 15%;
     padding: 5px 20px;
     box-sizing: border-box;
   }
-  .App-body {
+  .app-body {
     height: 85%;
   }
-  .App-intro {
+  .time-container {
     font-size: 4em;
   }
   .stats {

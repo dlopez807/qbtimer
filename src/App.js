@@ -1,6 +1,7 @@
 var React = require('react');
 var logo = require('./logo.svg');
 require('./App.css');
+var Scramble = require('./Scramble');
 var Time = require('./Time');
 var Stats = require('./Stats');
 var TimeList = require('./TimeList');
@@ -18,18 +19,13 @@ var excludedKeyCodes = [
 var App = React.createClass({
   getInitialState: function() {
     return {
-      scramble: genScramble3(),
+      scramble: Scramble.s(),
       time: 0,
       timerRunning: false,
       timerClass: '',
       timeList: [],
       interval: ''
     };
-  },
-  newScramble: function() {
-    this.setState({
-        scramble: genScramble3()
-      })
   },
   componentDidMount: function() {
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
@@ -39,6 +35,11 @@ var App = React.createClass({
       eventEnd = 'touchend';
     }
     this.chao();
+  },
+  newScramble: function() {
+    this.setState({
+        scramble: Scramble.s()
+      })
   },
   chao: function() {
     timerElement.removeEventListener(eventEnd, this.chao);
@@ -119,8 +120,8 @@ var App = React.createClass({
       clearInterval(this.state.interval);
       var currentTimeList = this.state.timeList;
       currentTimeList.unshift(this.state.time);
+      this.newScramble();
       this.setState({
-        scramble: genScramble3(),
         timerRunning: false,
         timeList: currentTimeList
       })
@@ -161,56 +162,3 @@ var App = React.createClass({
 });
 
 module.exports = App;
-
-/*
-  scramble
- */
-Array.prototype.selectRandom = function() {
-  return this[Math.floor(Math.random()*this.length)];
-}
-Array.prototype.remove = function(val){
-  for (var x in this) {
-    if (this[x] == val) {this.splice(this.indexOf(val), 1)}
-  }
-}
-
-var opposite = new Object;
-opposite["R"] = "L"; opposite["L"] = "R";
-opposite["U"] = "D"; opposite["D"] = "U";
-opposite["F"] = "B"; opposite["B"] = "F";
-
-function genScramble3(len = 25) {
-  var final = [];
-  var alter = ["", "'", "2"];
-  var before; var beforeThat;
-  
-  while (len > 0) {
-    var poss = ["R", "L", "U", "D", "F", "B"];
-    poss.remove(before); // Avoids things like R2 R'
-    if (opposite[before] == beforeThat) { poss.remove(beforeThat); }
-        // Avoids things like F' B2 F'
-    
-    var move = poss.selectRandom();
-    beforeThat = before; before = move;
-    final.push(move);
-    len -= 1; 
-        
-  }
-    
-  for (var m = 0; m < final.length; m++) {
-    if (m < 10) {
-      if (final[m] == "U" || final[m] == "D"){
-        final[m] = final[m] + alter.selectRandom();
-      }
-      else { 
-        final[m]  = final[m] + "2";
-      }
-    }
-    
-    else {
-      final[m] = final[m] + alter.selectRandom();
-    }
-  }
-  
-  return final.join(" ");
-}

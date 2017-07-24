@@ -113,7 +113,8 @@ and (max-width : 1024px)  {
 and (max-width : 667px)  {
   .App-header {
     height: 15%;
-    padding: 10px 20px;
+    padding: 5px 20px;
+    box-sizing: border-box;
   }
   .App-body {
     height: 85%;

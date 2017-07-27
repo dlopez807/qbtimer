@@ -11,6 +11,7 @@
     "react-scripts": "1.0.10"
   },
   "homepage": "http://dlopez807.github.io/qbtimer",
+  //"homepage": "http://qbtimer.s3-website-us-west-2.amazonaws.com/", // amazon s3 bucket
   "scripts": {
     "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",

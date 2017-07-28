@@ -1,17 +1,13 @@
-var React = require('react');
-var Time = require('./Time');
+import React from 'react';
+import Time from './Time';
 
-var TimeList = React.createClass({
+const TimeList = ({ timeList }) =>
+	<ol reversed className='timelist'>
+		{
+			timeList.map(function(time, index) {
+				return <li key={index}><Time time={time} /></li>
+			})
+		}
+	</ol>
 
-	render: function() {
-		var timeList = this.props.timeList.map(function(time, index) {
-			return <li key={index}><Time time={time} /></li>
-		});
-		return (
-			<ol reversed className='timelist'>{timeList}</ol>
-		);
-	}
-
-});
-
-module.exports = TimeList;
+export default TimeList;

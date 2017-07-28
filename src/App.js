@@ -1,36 +1,49 @@
-var React = require('react');
-var logo = require('./logo.svg');
-require('./App.css');
-var Scramble = require('./Scramble');
-var Time = require('./Time');
-var Stats = require('./Stats');
-var TimeList = require('./TimeList');
+import React, { Component } from 'react';
+import logo from './logo.svg';
+import './App.css';
+import Time from './Time';
+import Stats from './Stats';
+import TimeList from './TimeList';
 
-var FastClick = require('fastclick');
+import Cube from 'cube-scrambler';
+import FastClick from 'fastclick';
+
 FastClick.attach(document.body);
+const cubeScramble = () => Cube().scramble().join(" ");
 
 // by default, start/stop timer using keyboard
-var timerElement = document;
-var eventStart = 'keydown';
-var eventEnd = 'keyup';
+let timerElement = document;
+let eventStart = 'keydown';
+let eventEnd = 'keyup';
 
-var excludedKeyCodes = [
+const excludedKeyCodes = [
   91,  // left command key
   93  // right command key
 ];
 
-var App = React.createClass({
-  getInitialState: function() {
-    return {
-      scramble: Scramble.s(),
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      scramble: cubeScramble(),
       time: 0,
       timerRunning: false,
       timerClass: '',
       timeList: [],
       interval: ''
     };
-  },
-  componentDidMount: function() {
+    this.setScrambleState = this.setScrambleState.bind(this);
+    this.chao = this.chao.bind(this);
+    this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.startTimer = this.startTimer.bind(this);
+  }
+  setScrambleState() {
+    this.setState({
+        scramble: cubeScramble()
+      })
+  }
+  componentDidMount() {
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
       // on mobile, start/stop timer by touching screen
       timerElement = document.getElementsByClassName('app-body')[0];
@@ -38,33 +51,28 @@ var App = React.createClass({
       eventEnd = 'touchend';
     }
     this.chao();
-  },
-  newScramble: function() {
-    this.setState({
-        scramble: Scramble.s()
-      })
-  },
-  chao: function() {
+  }
+  chao() {
     timerElement.removeEventListener(eventEnd, this.chao);
-    var lastKeyUpAt = 0;
-    var timeHeldDown = 1000;
-    var timerReady = false;
+    let lastKeyUpAt = 0;
+    const timeHeldDown = 1000;
+    let timerReady = false;
 
     timerElement.addEventListener(eventStart, chao1);
     timerElement.addEventListener(eventEnd, chao2);
-    var that = this;
+    const that = this;
     that.setState({
       timerClass: ''
     });
 
     function chao1(e) {
       // check if keypressed is in excludedKeyCodes list
-      var excludedKeyPressed = false;
+      let excludedKeyPressed = false;
       if (e.altKey || e.ctrlKey || e.shiftKey)
         excludedKeyPressed = true;
       if (!excludedKeyPressed) {
         excludedKeyCodes.forEach(function(keyCode) {
-          if (e.keyCode == keyCode) {
+          if (e.keyCode === keyCode) {
             excludedKeyPressed = true;
             return;
           }
@@ -74,7 +82,7 @@ var App = React.createClass({
         return;
 
       // Set key down time to the current time
-      var keyDownAt = new Date();
+      const keyDownAt = new Date();
       that.setState({
         timerClass: ' down'
       });
@@ -103,8 +111,8 @@ var App = React.createClass({
         timerClass: ''
       });
     }
-  },
-  handleKeyUp: function(e) {
+  }
+  handleKeyUp(e) {
     if (!this.state.timerRunning) {
       timerElement.removeEventListener(eventEnd, this.handleKeyUp);
       timerElement.addEventListener(eventStart, this.handleKeyDown);
@@ -115,31 +123,30 @@ var App = React.createClass({
         interval: setInterval(this.startTimer, 10)
       })      
     }
-  },
-  handleKeyDown: function() {
+  }
+  handleKeyDown() {
     if (this.state.timerRunning) {
       timerElement.addEventListener(eventEnd, this.chao);
       timerElement.removeEventListener(eventStart, this.handleKeyDown);
       clearInterval(this.state.interval);
-      var currentTimeList = this.state.timeList;
+      let currentTimeList = this.state.timeList;
       currentTimeList.unshift(this.state.time);
-      this.newScramble();
+      this.setScrambleState();
       this.setState({
         timerRunning: false,
         timeList: currentTimeList
       })
     }
-  },
-  startTimer: function() {
-    var currentTime = this.state.time;
-    var nextTime = currentTime + 1;
+  }
+  startTimer() {
+    const nextTime = this.state.time + 1;
     this.setState({
       time: nextTime
     });
-  },
-  render: function() {
-    var appClass = 'app';
-    var logoClass = 'app-logo';
+  }
+  render() {
+    let appClass = 'app';
+    let logoClass = 'app-logo';
     if (this.state.timerRunning) {
       appClass += ' timerActive';
       logoClass += ' animate';
@@ -148,7 +155,12 @@ var App = React.createClass({
     return (
       <div className={appClass}>
         <div className="app-header">
-          <img src={logo} className={logoClass} alt="logo" onClick={this.newScramble} />
+          <img
+            src={logo}
+            className={logoClass}
+            alt="logo"
+            onClick={this.setScrambleState}
+          />
           <h2>{this.state.scramble}</h2>
         </div>
         <div className='app-body'>
@@ -161,7 +173,4 @@ var App = React.createClass({
       </div>
     );
   }
-
-});
-
-module.exports = App;
+}

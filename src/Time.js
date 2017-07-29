@@ -1,15 +1,6 @@
-var React = require('react');
+import React from 'react';
 
-var Time = React.createClass({
-
-	render: function() {
-		var time = this.props.time;
-		return (
-			<span className='time'>{convertTime(time)}</span>
-		);
-	}
-
-});
+const Time = ({ time }) => <span className='time'>{convertTime(time)}</span>
 
 function convertTime(time) {
 	var t = time;
@@ -25,4 +16,4 @@ function convertTime(time) {
 	return minutes + ":" + seconds + ":" + t;
 }
 
-module.exports = Time;
+export default Time;

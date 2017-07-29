@@ -53,11 +53,11 @@ html, body, #root {
 }
 
 .time-container.down {
-  color: red;
+  color: $darkBlue;
 }
 
 .time-container.down.ready {
-  color: green;
+  color: $reactBlue;
 }
 
 .app.timerActive .time-container,

@@ -1,6 +1,7 @@
 $blue: rgb(139, 157, 195);
 $darkBlue: rgb(059, 089, 152);
 $lightBlue: rgb(223, 227, 238);
+$reactBlue: #00d8ff;
 $gray: rgb(247, 247, 247);
 $white: rgb(255, 255, 255);
 
@@ -97,20 +98,42 @@ and (max-width : 1024px)  {
     height: 40px;
   }
   .app-header {
-    height: 60px;
+    height: 13%;
     font-size: .8em;
+    box-sizing: border-box;
+  }
+  .app-body{
+    height: 87%;
   }
   .time-container {
     font-size: 7em;
   }
+  * {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+    user-select: none;  
+  }
 }
+// @media only screen 
+// and (max-width : 1024px)
+// and (orientation: landscape) {
+//   .app-header {
+//     height: 13%;
+//     font-size: .8em;
+//   }
+//   .app-body{
+//     height: 87%;
+//   }
+// }
 
 @media only screen 
 and (max-width : 667px)  {
   .app-header {
     height: 17%;
     padding: 5px 20px;
-    box-sizing: border-box;
   }
   .app-body {
     height: 83%;
@@ -127,13 +150,5 @@ and (max-width : 667px)  {
   }
   .timelist {
     padding: 0 20%;
-  }
-  * {
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none;   /* Chrome/Safari/Opera */
-    -khtml-user-select: none;    /* Konqueror */
-    -moz-user-select: none;      /* Firefox */
-    -ms-user-select: none;       /* Internet Explorer/Edge */
-    user-select: none;  
   }
 }

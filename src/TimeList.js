@@ -4,9 +4,7 @@ import Time from './Time';
 const TimeList = ({ timeList }) =>
 	<ol reversed className='timelist'>
 		{
-			timeList.map(function(time, index) {
-				return <li key={index}><Time time={time} /></li>
-			})
+			timeList.map((time, index) => <li key={index}><Time time={time} /></li>)
 		}
 	</ol>
 

@@ -33,7 +33,7 @@ export default class App extends Component {
       interval: ''
     };
     this.setScrambleState = this.setScrambleState.bind(this);
-    this.chao = this.chao.bind(this);
+    this.initializeTimerEvents = this.initializeTimerEvents.bind(this);
     this.startTimer = this.startTimer.bind(this);
   }
   setScrambleState() {
@@ -48,22 +48,22 @@ export default class App extends Component {
       eventStart = 'touchstart';
       eventEnd = 'touchend';
     }
-    this.chao();
+    this.initializeTimerEvents();
   }
-  chao() {
-    timerElement.removeEventListener(eventEnd, this.chao);
+  initializeTimerEvents() {
+    timerElement.removeEventListener(eventEnd, this.initializeTimerEvents);
     let lastKeyUpAt = 0;
     const timeHeldDown = 1000;
     let timerReady = false;
 
-    timerElement.addEventListener(eventStart, chao1);
-    timerElement.addEventListener(eventEnd, chao2);
+    timerElement.addEventListener(eventStart, handleEventStartBeforeTimerReady);
+    timerElement.addEventListener(eventEnd, handleEventEndBeforeTimerReady);
     const that = this;
     that.setState({
       timerClass: ''
     });
 
-    function chao1(e) {
+    function handleEventStartBeforeTimerReady(e) {
       // check if keypressed is in excludedKeyCodes list
       let excludedKeyPressed = false;
       if (e.altKey || e.ctrlKey || e.shiftKey)
@@ -95,24 +95,24 @@ export default class App extends Component {
               that.setState({
                 timerClass: ' down ready'
               });
-              timerElement.removeEventListener(eventStart, chao1);
-              timerElement.removeEventListener(eventEnd, chao2);
-              timerElement.addEventListener(eventEnd, handleKeyUp);
+              timerElement.removeEventListener(eventStart, handleEventStartBeforeTimerReady);
+              timerElement.removeEventListener(eventEnd, handleEventEndBeforeTimerReady);
+              timerElement.addEventListener(eventEnd, handleEventEnd);
             }
           }
       }, timeHeldDown);
     }
-    function chao2() {
+    function handleEventEndBeforeTimerReady() {
       // Set lastKeyUpAt to hold the time the last key up event was fired
       lastKeyUpAt = new Date();
       that.setState({
         timerClass: ''
       });
     }
-    function handleKeyUp() {
+    function handleEventEnd() {
       if (!that.state.timerRunning) {
-        timerElement.removeEventListener(eventEnd, handleKeyUp);
-        timerElement.addEventListener(eventStart, handleKeyDown);
+        timerElement.removeEventListener(eventEnd, handleEventEnd);
+        timerElement.addEventListener(eventStart, handleEventStart);
         that.setState({
           timerRunning: true,
           timerClass: '',
@@ -121,10 +121,10 @@ export default class App extends Component {
         })      
       }
     }
-    function handleKeyDown() {
+    function handleEventStart() {
       if (that.state.timerRunning) {
-        timerElement.addEventListener(eventEnd, that.chao);
-        timerElement.removeEventListener(eventStart, handleKeyDown);
+        timerElement.addEventListener(eventEnd, that.initializeTimerEvents);
+        timerElement.removeEventListener(eventStart, handleEventStart);
         clearInterval(that.state.interval);
         let currentTimeList = that.state.timeList;
         currentTimeList.unshift(that.state.time);

@@ -34,8 +34,6 @@ export default class App extends Component {
     };
     this.setScrambleState = this.setScrambleState.bind(this);
     this.chao = this.chao.bind(this);
-    this.handleKeyUp = this.handleKeyUp.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
     this.startTimer = this.startTimer.bind(this);
   }
   setScrambleState() {
@@ -99,7 +97,7 @@ export default class App extends Component {
               });
               timerElement.removeEventListener(eventStart, chao1);
               timerElement.removeEventListener(eventEnd, chao2);
-              timerElement.addEventListener(eventEnd, that.handleKeyUp);
+              timerElement.addEventListener(eventEnd, handleKeyUp);
             }
           }
       }, timeHeldDown);
@@ -111,31 +109,31 @@ export default class App extends Component {
         timerClass: ''
       });
     }
-  }
-  handleKeyUp(e) {
-    if (!this.state.timerRunning) {
-      timerElement.removeEventListener(eventEnd, this.handleKeyUp);
-      timerElement.addEventListener(eventStart, this.handleKeyDown);
-      this.setState({
-        timerRunning: true,
-        timerClass: '',
-        time: 0,
-        interval: setInterval(this.startTimer, 10)
-      })      
+    function handleKeyUp() {
+      if (!that.state.timerRunning) {
+        timerElement.removeEventListener(eventEnd, handleKeyUp);
+        timerElement.addEventListener(eventStart, handleKeyDown);
+        that.setState({
+          timerRunning: true,
+          timerClass: '',
+          time: 0,
+          interval: setInterval(that.startTimer, 10)
+        })      
+      }
     }
-  }
-  handleKeyDown() {
-    if (this.state.timerRunning) {
-      timerElement.addEventListener(eventEnd, this.chao);
-      timerElement.removeEventListener(eventStart, this.handleKeyDown);
-      clearInterval(this.state.interval);
-      let currentTimeList = this.state.timeList;
-      currentTimeList.unshift(this.state.time);
-      this.setScrambleState();
-      this.setState({
-        timerRunning: false,
-        timeList: currentTimeList
-      })
+    function handleKeyDown() {
+      if (that.state.timerRunning) {
+        timerElement.addEventListener(eventEnd, that.chao);
+        timerElement.removeEventListener(eventStart, handleKeyDown);
+        clearInterval(that.state.interval);
+        let currentTimeList = that.state.timeList;
+        currentTimeList.unshift(that.state.time);
+        that.setScrambleState();
+        that.setState({
+          timerRunning: false,
+          timeList: currentTimeList
+        })
+      }
     }
   }
   startTimer() {

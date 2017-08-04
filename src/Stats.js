@@ -14,16 +14,16 @@ const Stats = ({ timeList }) => {
 	}
 	return (
 		<ul className='stats'>
-			<li><p>best</p>
+			<li><p className='stats-label'>best</p>
 				<p><Time time={best} /></p>
 			</li>
-			<li><p>average</p>
+			<li><p className='stats-label'>average</p>
 				<p><Time time={average} /></p>
 			</li>
-			<li><p>average of 5</p>
+			<li><p className='stats-label'>average of 5</p>
 				<p><Time time={average5} /></p>
 			</li>
-			<li><p>average of 10</p>
+			<li><p className='stats-label'>average of 10</p>
 				<p><Time time={average10} /></p>
 			</li>
 		</ul>

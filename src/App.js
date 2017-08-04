@@ -30,9 +30,11 @@ export default class App extends Component {
       timerRunning: false,
       timerClass: '',
       timeList: [],
-      interval: ''
+      interval: '',
+      showTimeLog: false
     };
     this.setScrambleState = this.setScrambleState.bind(this);
+    this.toggleShowTimeLogState = this.toggleShowTimeLogState.bind(this);
     this.initializeTimerEvents = this.initializeTimerEvents.bind(this);
     this.startTimer = this.startTimer.bind(this);
   }
@@ -40,6 +42,12 @@ export default class App extends Component {
     this.setState({
         scramble: cubeScramble()
       })
+  }
+  toggleShowTimeLogState() {
+    const showTimeLogState = this.state.showTimeLog;
+    this.setState({
+      showTimeLog: !showTimeLogState
+    })
   }
   componentDidMount() {
     if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
@@ -150,6 +158,26 @@ export default class App extends Component {
       logoClass += ' animate';
 
     }
+    if (this.state.showTimeLog)
+      return (
+        <div className={appClass}>
+          <div className="app-header">
+            <img
+              src={logo}
+              className={logoClass}
+              alt="logo"
+              onClick={this.setScrambleState}
+            />
+            <h2>{this.state.scramble}</h2>
+          </div>
+          <div className="app-body">
+            <TimeList timeList={this.state.timeList} />
+          </div>
+          <div className="app-footer">
+            <button className='back-button' onClick={this.toggleShowTimeLogState}>Back</button>
+          </div>
+        </div>  
+      );
     return (
       <div className={appClass}>
         <div className="app-header">
@@ -166,7 +194,11 @@ export default class App extends Component {
             <Time time={this.state.time} />
           </p>
           <Stats timeList={this.state.timeList} />
-          <TimeList timeList={this.state.timeList} />
+        </div>
+        <div className="app-footer">
+          <div className='button-container'><button onClick={this.setScrambleState}>New Scramble</button></div>
+          <div className='button-container'><button onClick={this.toggleShowTimeLogState}>Time Log</button></div>
+          <div className='button-container'><button>Settings</button></div>
         </div>
       </div>
     );

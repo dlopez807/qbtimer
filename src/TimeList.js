@@ -1,11 +1,11 @@
 import React from 'react';
 import Time from './Time';
 
-const TimeList = ({ timeList }) =>
-	<ol reversed className='timelist'>
+const TimeList = ({ timeList, onRemoveTime }) =>
+	<ul reversed className='timelist'>
 		{
-			timeList.map((time, index) => <li key={index}><Time time={time} /></li>)
+			timeList.map((time, index) => <li key={index}><Time time={time} /><button onClick={() => onRemoveTime(index)}>Remove</button></li>)
 		}
-	</ol>
+	</ul>
 
 export default TimeList;

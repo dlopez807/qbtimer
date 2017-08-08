@@ -24,39 +24,60 @@ const excludedKeyCodes = [
 export default class App extends Component {
   constructor(props) {
     super(props);
+    let timeList, showTimeLog;
+    if (storageAvailable('localStorage')) {
+      timeList = JSON.parse(localStorage.getItem('timeList')) || [];
+      showTimeLog = JSON.parse(localStorage.getItem('showTimeLog')) || false;
+    }
+    else {
+
+    }
+
     this.state = {
       scramble: cubeScramble(),
       time: 0,
       timerRunning: false,
       timerClass: '',
-      timeList: [],
+      timeList: timeList,
       interval: '',
-      showTimeLog: false
+      showTimeLog: showTimeLog
     };
     this.setScrambleState = this.setScrambleState.bind(this);
+    this.setTimeListState = this.setTimeListState.bind(this);
     this.toggleShowTimeLogState = this.toggleShowTimeLogState.bind(this);
     this.initializeTimerEvents = this.initializeTimerEvents.bind(this);
     this.startTimer = this.startTimer.bind(this);
+    this.onRemoveTime = this.onRemoveTime.bind(this);
   }
   setScrambleState() {
     this.setState({
         scramble: cubeScramble()
       })
   }
+  setTimeListState(timeList) {
+    this.setState({ timeList: timeList });
+    if (storageAvailable('localStorage')) {
+      localStorage.setItem('timeList', JSON.stringify(timeList));
+    }
+  }
   toggleShowTimeLogState() {
     const showTimeLogState = this.state.showTimeLog;
     this.setState({
       showTimeLog: !showTimeLogState
     })
+    if (storageAvailable('localStorage')) {
+      localStorage.setItem('showTimeLog', !showTimeLogState);
+    }
   }
   componentDidMount() {
-    if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    if ( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
       // on mobile, start/stop timer by touching screen
       timerElement = document.getElementsByClassName('app-body')[0];
       eventStart = 'touchstart';
       eventEnd = 'touchend';
     }
-    this.initializeTimerEvents();
+    if (!this.state.showTimeLog)
+      this.initializeTimerEvents();
   }
   initializeTimerEvents() {
     timerElement.removeEventListener(eventEnd, this.initializeTimerEvents);
@@ -137,9 +158,9 @@ export default class App extends Component {
         let currentTimeList = that.state.timeList;
         currentTimeList.unshift(that.state.time);
         that.setScrambleState();
+        that.setTimeListState(currentTimeList);
         that.setState({
-          timerRunning: false,
-          timeList: currentTimeList
+          timerRunning: false
         })
       }
     }
@@ -149,6 +170,11 @@ export default class App extends Component {
     this.setState({
       time: nextTime
     });
+  }
+  onRemoveTime(index) {
+    const updatedList = this.state.timeList;
+    updatedList.splice(index, 1);
+    this.setTimeListState(updatedList);
   }
   render() {
     let appClass = 'app';
@@ -171,10 +197,18 @@ export default class App extends Component {
             <h2>{this.state.scramble}</h2>
           </div>
           <div className="app-body">
-            <TimeList timeList={this.state.timeList} />
+            <TimeList
+              timeList={this.state.timeList}
+              onRemoveTime={this.onRemoveTime}
+            />
           </div>
           <div className="app-footer">
-            <button className='back-button' onClick={this.toggleShowTimeLogState}>Back</button>
+            <div className='button-container one-half'>
+              <button className='clear-times' onClick={() => {this.setTimeListState([]) } }>Clear Times</button>
+            </div>
+            <div className='button-container one-half'>
+              <button className='back-button' onClick={this.toggleShowTimeLogState}>Back</button>
+            </div>
           </div>
         </div>  
       );
@@ -185,7 +219,7 @@ export default class App extends Component {
             src={logo}
             className={logoClass}
             alt="logo"
-            onClick={this.setScrambleState}
+            //onClick={this.setScrambleState}
           />
           <h2>{this.state.scramble}</h2>
         </div>
@@ -196,11 +230,36 @@ export default class App extends Component {
           <Stats timeList={this.state.timeList} />
         </div>
         <div className="app-footer">
-          <div className='button-container'><button onClick={this.setScrambleState}>New Scramble</button></div>
-          <div className='button-container'><button onClick={this.toggleShowTimeLogState}>Time Log</button></div>
-          <div className='button-container'><button>Settings</button></div>
+          <div className='button-container one-half'><button onClick={this.setScrambleState}>New Scramble</button></div>
+          <div className='button-container one-half'><button onClick={this.toggleShowTimeLogState}>Time Log ({this.state.timeList.length})</button></div>
+          
         </div>
       </div>
     );
   }
+}
+
+// from https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
+function storageAvailable(type) {
+    try {
+        var storage = window[type],
+            x = '__storage_test__';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    }
+    catch(e) {
+        return e instanceof DOMException && (
+            // everything except Firefox
+            e.code === 22 ||
+            // Firefox
+            e.code === 1014 ||
+            // test name field too, because code might not be present
+            // everything except Firefox
+            e.name === 'QuotaExceededError' ||
+            // Firefox
+            e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+            // acknowledge QuotaExceededError only if there's something already stored
+            storage.length !== 0;
+    }
 }

@@ -16,7 +16,9 @@ let timerElement = document;
 let eventStart = 'keydown';
 let eventEnd = 'keyup';
 
-const excludedKeyCodes = [
+const scrambleShortcut = 9; // tab
+const excludedKeyCodes = [ // keys excluded from starting timer
+  scrambleShortcut,
   91,  // left command key
   93  // right command key
 ];
@@ -104,6 +106,10 @@ export default class App extends Component {
             return;
           }
         })
+      }
+      if (e.keyCode === scrambleShortcut) {
+        e.preventDefault();
+        that.setScrambleState();
       }
       if (excludedKeyPressed)
         return;

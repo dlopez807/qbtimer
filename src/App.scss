@@ -149,6 +149,10 @@ html, body, #root {
 
 }
 
+.button-label-icon {
+  display: none;
+}
+
 @media only screen 
 and (max-width : 1024px)  {
   h2 {
@@ -163,10 +167,38 @@ and (max-width : 1024px)  {
     box-sizing: border-box;
   }
   .app-body{
-    height: 87%;
+    height: 80%;
+    overflow-y: scroll;
+  }
+  .app-footer {
+    display: flex;
+    height: 7%;
   }
   .time-container {
     font-size: 7em;
+  }
+  .button-label-text {
+    display: none;
+  }
+
+  .button-label-icon {
+    display: inline;
+    color: $reactBlue;
+  }
+  .app-footer .button-container {
+    height: 100%;
+  }
+
+  .app-footer .button-container.one-third {
+    width: percentage(1/3);
+  }
+
+  .app-footer .button-container.one-half {
+    width: percentage(1/2);
+  }  
+  .timelist li {
+    margin-bottom: 3%;
+    padding: 0 20%;
   }
   * {
     -webkit-touch-callout: none; /* iOS Safari */
@@ -197,11 +229,9 @@ and (max-width : 667px)  {
   }
   .app-body {
     height: 76%;
-    overflow-y: scroll;
   }
   .app-footer {
-    display: flex;
-    height: 7%
+    height: 7%;
   }
   .time-container {
     font-size: 4em;
@@ -216,21 +246,6 @@ and (max-width : 667px)  {
   .timelist {
     //padding: 8% 12%;
   }
-  .timelist li {
-    margin-bottom: 3%;
-    padding: 0 20%;
-  }
-  .app-footer .button-container {
-    height: 100%;
-  }
-
-  .app-footer .button-container.one-third {
-    width: percentage(1/3);
-  }
-
-  .app-footer .button-container.one-half {
-    width: percentage(1/2);
-  }  
 }
 
 @media only screen 

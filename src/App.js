@@ -7,6 +7,7 @@ import TimeList from './TimeList';
 
 import Cube from 'cube-scrambler';
 import FastClick from 'fastclick';
+import { Box, List, Trash, CornerDownLeft } from 'react-feather';
 
 FastClick.attach(document.body);
 const cubeScramble = () => Cube().scramble().join(" ");
@@ -210,10 +211,16 @@ export default class App extends Component {
           </div>
           <div className="app-footer">
             <div className='button-container one-half'>
-              <button className='clear-times' onClick={() => {this.setTimeListState([]) } }>Clear Times</button>
+              <button className='clear-times' onClick={() => {this.setTimeListState([]) } }>
+                <span className='button-label-text'>Clear Times</span>
+                <Trash className='button-label-icon' />
+              </button>
             </div>
             <div className='button-container one-half'>
-              <button className='back-button' onClick={this.toggleShowTimeLogState}>Back</button>
+              <button className='back-button' onClick={this.toggleShowTimeLogState}>
+                <span className='button-label-text'>Back</span>
+                <CornerDownLeft className='button-label-icon' />
+              </button>
             </div>
           </div>
         </div>  
@@ -236,8 +243,18 @@ export default class App extends Component {
           <Stats timeList={this.state.timeList} />
         </div>
         <div className="app-footer">
-          <div className='button-container one-half'><button onClick={this.setScrambleState}>New Scramble</button></div>
-          <div className='button-container one-half'><button onClick={this.toggleShowTimeLogState}>Time Log ({this.state.timeList.length})</button></div>
+          <div className='button-container one-half'>
+            <button onClick={this.setScrambleState}>
+              <span className='button-label-text'>New Scramble</span>
+              <Box className='button-label-icon' />
+            </button>
+          </div>
+          <div className='button-container one-half'>
+            <button onClick={this.toggleShowTimeLogState}>
+              <span className='button-label-text'>Time Log ({this.state.timeList.length})</span>
+              <List className='button-label-icon' />
+            </button>
+          </div>
           
         </div>
       </div>

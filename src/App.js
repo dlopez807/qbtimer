@@ -238,7 +238,7 @@ export default class App extends Component {
         </div>
         <div className='app-body'>
           <p className={'time-container' + this.state.timerClass}>
-            <Time time={this.state.time} />
+            <Time time={this.state.time} timer={true} />
           </p>
           <Stats timeList={this.state.timeList} />
         </div>

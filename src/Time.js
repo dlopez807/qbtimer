@@ -1,8 +1,10 @@
 import React from 'react';
 
-const Time = ({ time }) => <span className='time'>{convertTime(time)}</span>
+const Time = ({ time, timer }) => <span className='time'>{convertTime(time, timer)}</span>
 
-function convertTime(time) {
+function convertTime(time, timer) {
+	if (time === 0 && !timer)
+		return '-';
 	var t = time;
 	var minutes = Math.floor(t / 6000);
 	t = t % 6000;
